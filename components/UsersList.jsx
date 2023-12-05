@@ -1,6 +1,10 @@
 import { useState } from "react";
 
-import { useUsers, useUsersDispatch } from "../utils/UserReducerContext";
+import {
+  useUsers,
+  useUsersDispatch,
+  ActionTypes,
+} from "../utils/UserReducerContext";
 
 import UserCard from "./UserCard";
 
@@ -24,16 +28,13 @@ export default function UsersList() {
 
   const handleDelete = (id) => {
     if (!id) return;
-    dispatch({ type: "DELETE_USER", payload: { id: id } });
+    dispatch({
+      type: ActionTypes.DELETE_USER,
+      payload: { id: id },
+    });
   };
 
-  const handleSave = (id, user) => {
-    if (!id) return;
-
-    if (!user_data.id) {
-      user_data.id = user.id;
-    }
-
+  const handleSave = (user) => {
     if (!user_data.name) {
       user_data.name = user.name;
     }
@@ -42,7 +43,10 @@ export default function UsersList() {
       user_data.bio = user.bio;
     }
 
-    dispatch({ type: "EDIT_USER", payload: { id, user_data: user_data } });
+    dispatch({
+      type: ActionTypes.EDIT_USER,
+      payload: { id: user.id, user_data: user_data },
+    });
     setEditing(null);
   };
 
@@ -55,16 +59,10 @@ export default function UsersList() {
             {editing === user.id ? (
               <>
                 <UserCard user={user_data} setUser={setUserData} />
+                <button onClick={handleCancel}>Cancel</button>
                 <button
                   onClick={() => {
-                    handleCancel();
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => {
-                    handleSave(user.id, user);
+                    handleSave(user);
                   }}
                 >
                   Save

@@ -3,10 +3,14 @@ import { useReducer, useContext, createContext } from "react";
 const UsersContext = createContext();
 const UsersDispatchContext = createContext();
 
+export const ActionTypes = {
+  EDIT_USER: "EDIT_USER",
+  ADD_USER: "ADD_USER",
+  DELETE_USER: "DELETE_USER",
+};
+
 export function UsersProvider({ children }) {
-  const [users, dispatch] = useReducer(usersReducer, [], () => [
-    { id: "user#5", name: "Pikachu", bio: "Hello World!" },
-  ]);
+  const [users, dispatch] = useReducer(usersReducer, []);
 
   return (
     <UsersContext.Provider value={users}>
@@ -35,7 +39,7 @@ export function useUsersDispatch() {
 
 function usersReducer(users, action) {
   switch (action.type) {
-    case "ADD_USER": {
+    case ActionTypes.ADD_USER: {
       const { id, name, bio } = action.payload;
 
       if (users.find((user) => user.id === id)) {
@@ -44,11 +48,11 @@ function usersReducer(users, action) {
 
       return [...users, { id, name, bio }];
     }
-    case "EDIT_USER": {
+    case ActionTypes.EDIT_USER: {
       const { id, user_data } = action.payload;
       return users.map((user) => (user.id === id ? user_data : user));
     }
-    case "DELETE_USER": {
+    case ActionTypes.DELETE_USER: {
       const { id } = action.payload;
       return users.filter((user) => user.id !== id);
     }
