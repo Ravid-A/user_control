@@ -8,13 +8,7 @@ export default function UserCard({ user, setUser }) {
       {setUser ? (
         <>
           <p>
-            ID:{" "}
-            <input
-              type="text"
-              id="id"
-              value={user.id}
-              onChange={handleChange}
-            />
+            ID: <input type="text" id="id" value={user.id} disabled={true} />
           </p>
           <p>
             Name:{" "}

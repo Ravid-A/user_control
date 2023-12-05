@@ -2,16 +2,26 @@ import { useState } from "react";
 
 import UserCard from "./UserCard.jsx";
 
-import { useUsers, useUsersDispatch } from "../utils/UserReducerContext.js";
+import {
+  useUsers,
+  useUsersDispatch,
+  ActionTypes,
+} from "../utils/UserReducerContext.js";
+
+let next_id = 0;
 
 export default function AddUser() {
-  const [user, setUser] = useState({ id: "", name: "", bio: "" });
-
   const users = useUsers();
   const dispatch = useUsersDispatch();
 
+  const [user, setUser] = useState({
+    id: "",
+    name: "",
+    bio: "",
+  });
+
   const handleAdd = () => {
-    if (!user.id || !user.name || !user.bio) {
+    if (!user.name || !user.bio) {
       alert("AddUser: Please fill out all fields.");
       return;
     }
@@ -21,9 +31,23 @@ export default function AddUser() {
       return;
     }
 
-    setUser({ id: "", name: "", bio: "" });
-    dispatch({ type: "ADD_USER", payload: user });
+    dispatch({
+      type: ActionTypes.ADD_USER,
+      payload: user,
+    });
+
+    next_id++;
+
+    setUser({ id: `user#${next_id + 1}`, name: "", bio: "" });
   };
+
+  if (next_id === 0) {
+    next_id = users.length;
+  }
+
+  if (!user.id) {
+    setUser({ id: `user#${next_id + 1}`, name: "", bio: "" });
+  }
 
   return (
     <>
